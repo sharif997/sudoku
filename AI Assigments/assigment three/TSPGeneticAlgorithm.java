@@ -41,6 +41,26 @@ public class TSPGeneticAlgorithm {
             return Math.sqrt(Math.pow(loc2.x - loc1.x, 2) + Math.pow(loc2.y - loc1.y, 2));
         }
     }
+    public static List<Location> readLocationsFromFile(String filename) {
+        List<Location> locations = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 3) {
+                    int id = Integer.parseInt(parts[0].trim());
+                    int x = Integer.parseInt(parts[1].trim());
+                    int y = Integer.parseInt(parts[2].trim());
+                    locations.add(new Location(id, x, y));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return locations;
+    }
 
     static List<Location> locations = new ArrayList<>();
     static Random random = new Random();
@@ -48,11 +68,13 @@ public class TSPGeneticAlgorithm {
     static int maxDistance = 9000;
 
     public static void main(String[] args) {
-        // Add locations
-        locations.add(new Location(1, 565, 575));
-        locations.add(new Location(2, 575, 25));
-        locations.add(new Location(3, 345, 185));
-        // Add more locations as needed
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the filename containing locations: ");
+        String filename = scanner.nextLine();
+
+        List<Location> locations = readLocationsFromFile(filename);
 
         // Create initial population
         int populationSize = 100;
